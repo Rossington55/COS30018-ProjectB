@@ -58,6 +58,8 @@ data = yf.download(COMPANY,TRAIN_START,TRAIN_END)
 # 3) Change the Prediction days
 #------------------------------------------------------------------------------
 PRICE_VALUE = "Close"
+print(data)
+
 
 scaler = MinMaxScaler(feature_range=(0, 1)) 
 # Note that, by default, feature_range=(0, 1). Thus, if you want a different 
