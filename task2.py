@@ -25,9 +25,12 @@ def shuffle_in_unison(a, b):
     np.random.shuffle(b)
 
 def get_index_at_date(list,date):
-    for i, item in enumerate(list):
-        if date <= item[-1][-1]:
+    # Search through the list of sequences and find the first sequence with a final tuple date greater than the split date
+    for i, sequence in enumerate(list):
+        if date < sequence[-1][-1]:
             return i
+    
+    # No date found
     return -1 
 
 
@@ -131,10 +134,11 @@ def load_data(ticker, n_steps=50, scale=True, shuffle=True, lookup_step=1, split
             shuffle_in_unison(result["X_test"], result["y_test"])
     elif split_by_date:
         split_index = get_index_at_date(X,split_by_date)
-        result["X_train"] = X[:split_index]
-        result["y_train"] = y[:split_index]
-        result["X_test"]  = X[split_index:]
-        result["y_test"]  = y[split_index:]
+        if split_index > -1:
+            result["X_train"] = X[:split_index]
+            result["y_train"] = y[:split_index]
+            result["X_test"]  = X[split_index:]
+            result["y_test"]  = y[split_index:]
         if shuffle:
             # shuffle the datasets for training (if shuffle parameter is set)
             shuffle_in_unison(result["X_train"], result["y_train"])
@@ -143,7 +147,7 @@ def load_data(ticker, n_steps=50, scale=True, shuffle=True, lookup_step=1, split
     else:    
         # split the dataset randomly
         result["X_train"], result["X_test"], result["y_train"], result["y_test"] = train_test_split(X, y, 
-                                                                                test_size=0.2, shuffle=shuffle)
+                                                                                test_size=random.randrange(0,1), shuffle=shuffle)
 
     # get the list of test set dates
     dates = result["X_test"][:, -1, -1]
