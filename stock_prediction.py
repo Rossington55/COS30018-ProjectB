@@ -235,6 +235,8 @@ x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 # TO DO: Explain the above 5 lines
 
 predicted_prices = model.predict(x_test)
+print(predicted_prices)
+
 predicted_prices = scaler.inverse_transform(predicted_prices)
 # Clearly, as we transform our data into the normalized range (0,1),
 # we now need to reverse this transformation 
@@ -259,13 +261,13 @@ plt.show()
 #------------------------------------------------------------------------------
 
 
-real_data = [model_inputs[len(model_inputs) - PREDICTION_DAYS:, 0]]
-real_data = np.array(real_data)
-real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
+# real_data = [model_inputs[len(model_inputs) - PREDICTION_DAYS:, 0]]
+# real_data = np.array(real_data)
+# real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
 
-prediction = model.predict(real_data)
-prediction = scaler.inverse_transform(prediction)
-print(f"Prediction: {prediction}")
+# prediction = model.predict(real_data)
+# prediction = scaler.inverse_transform(prediction)
+# print(f"Prediction: {prediction}")
 
 # A few concluding remarks here:
 # 1. The predictor is quite bad, especially if you look at the next day 
