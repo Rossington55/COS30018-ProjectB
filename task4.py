@@ -87,8 +87,8 @@ if __name__ == "__main__":
 
     # Step 2: Define the layer structure
     layer_info = [
-        Layer('GRU',10),
-        Layer('GRU',10),
+        Layer('LSTM',20),
+        Layer('LSTM',20),
     ]
 
     # Create the model
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
     # Step 3: Train the model
     history = model.fit(data["X_train"], data["y_train"], 
-                        batch_size=64, epochs=25, 
+                        batch_size=128, epochs=25, 
                         validation_data=(data["X_test"], data["y_test"]), 
                         verbose=1)
 
