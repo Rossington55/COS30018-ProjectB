@@ -4,6 +4,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, GRU
 from task2 import load_data
 
+
 LOOKUP_STEP = 10
 N_STEPS = 2
 FEATURE_COLUMNS = ['Adj Close', 'Open', 'High', 'Low', 'Close', 'Volume']
