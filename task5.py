@@ -101,7 +101,8 @@ def load_data_multistep(ticker, n_steps=50, scale=True, shuffle=True, lookup_ste
     # For every row in the df
     targets = []
     for i in range(len(df.index)):
-        targets.append(df["Adj Close"][i+lookup_step:i+lookup_step+k_days])#Add the Adj Close of that many days in the future (on top of the lookup step)
+        #Add the Adj Close of that many days in the future (on top of the lookup step)
+        targets.append(df["Adj Close"][i+lookup_step:i+lookup_step+k_days])
     
     # last `lookup_step` columns contains NaN in future column
     # get them before droping NaNs
@@ -114,11 +115,13 @@ def load_data_multistep(ticker, n_steps=50, scale=True, shuffle=True, lookup_ste
     sequences = deque(maxlen=n_steps)
 
     target_ptr = 0
+    # Split the data into sequences
     for entry in df[feature_columns + ["date"]].values:
         sequences.append(entry)
         if len(sequences) == n_steps:
-            sequence_data.append([np.array(sequences), targets[0]])
-            target_ptr+=1
+            if targets[target_ptr] is not None:
+                sequence_data.append([np.array(sequences), targets[0]])
+                target_ptr+=1
 
     # get the last sequence by appending the last `n_step` sequence with `lookup_step` sequence
     # for instance, if n_steps=50 and lookup_step=10, last_sequence should be of 60 (that is 50+10) length
@@ -200,13 +203,14 @@ if __name__ == "__main__":
                         verbose=1)
 
     predicted = model.predict(data["X_test"])
-    first_y_predicted = data["column_scaler"]["Adj Close"].inverse_transform(predicted)[-1]
-    first_y_actual = data["column_scaler"]["Adj Close"].inverse_transform(data["y_test"])[-1]
+    last_y_predicted = data["column_scaler"]["Adj Close"].inverse_transform(predicted)[-1]
+    last_y_actual = data["column_scaler"]["Adj Close"].inverse_transform(data["y_test"])[-1]
 
 
-    plt.plot(first_y_actual,c='b')
-    plt.plot(first_y_predicted,c='r')
+    plt.plot(last_y_actual,c='b')
+    plt.plot(last_y_predicted,c='r')
     plt.ylabel("Price")
     plt.xlabel("Days")
     plt.legend(["Actual Price", "Predicted Price"])
     plt.show()
+
