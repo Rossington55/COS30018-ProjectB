@@ -182,21 +182,16 @@ def load_data_multistep(ticker, n_steps=50, scale=True, shuffle=True, lookup_ste
     return result
 
 if __name__ == "__main__":
-    # Step 1: Load data
-    
     data = load_data_multistep(ticker="CBA.AX", data_start='2021-01-01',data_end='2024-01-20', lookup_step=LOOKUP_STEP,n_steps=N_STEPS, 
                      split_by_ratio=0.5, feature_columns=FEATURE_COLUMNS, k_days=K_DAYS)
 
-    # Step 2: Define the layer structure
     layer_info = [
         Layer('LSTM',20),
         Layer('LSTM',20),
     ]
 
-    # Create the model
     model = create_custom_model_multistep(sequence_length=2,feature_length=len(FEATURE_COLUMNS),layers=layer_info, k_days=K_DAYS)
 
-    # Step 3: Train the model
     history = model.fit(data["X_train"], data["y_train"], 
                         batch_size=128, epochs=25, 
                         validation_data=(data["X_test"], data["y_test"]), 
